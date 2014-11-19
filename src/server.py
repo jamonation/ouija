@@ -12,6 +12,7 @@ from flask import Flask, request, json, Response, abort
 
 static_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "static"))
 app = Flask(__name__, static_url_path="", static_folder=static_path)
+app.config.from_pyfile('../config/config.py') 
 
 class CSetSummary(object):
     def __init__(self, cset_id):
@@ -23,10 +24,10 @@ class CSetSummary(object):
 
 
 def create_db_connnection():
-    return MySQLdb.connect(host="localhost",
-                           user="root",
-                           passwd="root",
-                           db="ouija")
+    return MySQLdb.connect(host=app.config['DB_HOST'],
+                           user=app.config['DB_USER'],
+                           passwd="",
+                           db=app.config['DB_NAME'])
 
 
 def serialize_to_json(object):
@@ -419,4 +420,4 @@ def template(filename):
     abort(404)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8157, debug=False)
+    app.run(host="0.0.0.0", port=8157, debug=True)
